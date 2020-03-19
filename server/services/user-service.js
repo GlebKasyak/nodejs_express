@@ -3,20 +3,16 @@ const fs = require("fs");
 const usersURL = path.resolve(__dirname, "../../", "users.json");
 
 const data = fs.readFileSync(usersURL, "utf8");
+const users = JSON.parse(data);
 
-
-const get = () => JSON.parse(data);
+const get = () => users;
 
 const del = id => {
-    const users = JSON.parse(data);
-
     const deletedUsers = users.filter(user => String(user.id) !== id);
     fs.writeFileSync(usersURL, JSON.stringify(deletedUsers));
 };
 
 const update = (id, body) => {
-    const users = JSON.parse(data);
-
     const updatedUsers = users.map(user => {
         if(String(user.id) === id) {
             return { ...user, ...body }
@@ -29,8 +25,6 @@ const update = (id, body) => {
 };
 
 const add = body => {
-    const users = JSON.parse(data);
-
     users.push({ ...body });
     fs.writeFileSync(usersURL, JSON.stringify(users));
 };
