@@ -1,0 +1,23 @@
+{
+  "name": "CRUD",
+  "version": "1.0.0",
+  "description": "CRUD",
+  "main": "app.js",
+  "scripts": {
+    "start": "node sserver/app.js",
+    "dev": "nodemon server/app.js"
+  },
+  "keywords": [
+    "nodejs",
+    "express"
+  ],
+  "author": "Kasyanchyck Gleb <gkebkasyak@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "dotenv": "^8.2.0",
+    "nodemon": "^2.0.2"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
