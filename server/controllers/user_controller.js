@@ -39,7 +39,7 @@ class UserController {
         try {
             add(req.body);
 
-            res.json({ message: "User in created", success: true });
+            res.status(201).json({ message: "User in created", success: true });
         } catch (err) {
             res.status(400).json({ message: err.message, success: false });
         }
