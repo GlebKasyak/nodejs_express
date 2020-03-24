@@ -1,9 +1,13 @@
-const { getAll, get, del, update, add } = require("./../services/user-service");
+import express from "express";
 
-class UserController {
+import { getAll, get, del, update, add } from "../services/user-service";
+import { IUserController } from "../interfaces/user.interface";
+
+
+class UserController implements IUserController {
     constructor() {}
 
-    async getUsers(req, res) {
+    public async getUsers(req: express.Request, res:express.Response): Promise<void> {
         try {
             const users = await getAll();
 
@@ -13,7 +17,7 @@ class UserController {
         }
     }
 
-    async getUser(req, res) {
+    public async getUser(req: express.Request, res:express.Response): Promise<void> {
         try {
             const user = await get(req.params.id);
 
@@ -23,7 +27,7 @@ class UserController {
         }
     }
 
-    async deleteUser(req, res) {
+    public async deleteUser(req: express.Request, res:express.Response): Promise<void> {
         try {
             const result = await del(req.params.id);
 
@@ -33,7 +37,7 @@ class UserController {
         }
     }
 
-    async updateUser(req, res) {
+    public async updateUser(req: express.Request, res:express.Response): Promise<void> {
         try {
             const user = await update(req.params.id, req.body);
 
@@ -43,9 +47,9 @@ class UserController {
         }
     }
 
-    async addUser(req, res) {
+    public async addUser(req: express.Request, res:express.Response): Promise<void> {
         try {
-            const user = await add(req.body, res);
+            const user = await add(req.body);
 
             res.status(201).json({ message: "User in created", success: true, user });
         } catch (err) {
@@ -54,4 +58,4 @@ class UserController {
     }
 }
 
-module.exports = UserController;
+export default UserController;

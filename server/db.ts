@@ -1,4 +1,4 @@
-const { connect, connection, connections } = require("mongoose");
+import { connect, connection, connections } from "mongoose";
 const { DB_URL } = require("./config");
 
 const db = connect(DB_URL, {
@@ -8,7 +8,7 @@ const db = connect(DB_URL, {
     useCreateIndex: true
 });
 
-connection.on("open", () => {
+connection.on("open", (): void => {
     const info = connections[0];
     console.log(`Connected to:
      host: ${info.host},
@@ -17,4 +17,4 @@ connection.on("open", () => {
     `)
 });
 
-module.exports = db;
+export default db;

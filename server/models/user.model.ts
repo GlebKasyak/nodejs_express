@@ -1,11 +1,16 @@
-const { Schema, model } = require("mongoose");
+import { Schema, model } from "mongoose";
+import { IUser } from "../interfaces/user.interface";
 
-const userSchema = new Schema({
-    name: {
+const userSchema: Schema = new Schema({
+    firstName: {
         type: String,
         minlength: 4,
         trim: true,
         required: true
+    },
+    secondName: {
+        type: String,
+        trim: true,
     },
     email: {
         type: String,
@@ -24,4 +29,4 @@ const userSchema = new Schema({
     timestamps: true
 });
 
-module.exports = model("User", userSchema);
+export default model<IUser>("User", userSchema);
