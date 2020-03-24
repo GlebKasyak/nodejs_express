@@ -1,35 +1,19 @@
-const path = require("path");
-const fs = require("fs");
-const usersURL = path.resolve(__dirname, "../../", "users.json");
+const { User } = require("./../models");
 
-const data = fs.readFileSync(usersURL, "utf8");
-const users = JSON.parse(data);
 
-const get = () => users;
+const getAll = async () => await User.find({});
 
-const del = id => {
-    const deletedUsers = users.filter(user => String(user.id) !== id);
-    fs.writeFileSync(usersURL, JSON.stringify(deletedUsers));
-};
+const get = async id => await User.findById(id);
 
-const update = (id, body) => {
-    const updatedUsers = users.map(user => {
-        if(String(user.id) === id) {
-            return { ...user, ...body }
-        }
+const del = async id => await User.deleteOne({ _id: id });
 
-        return user
-    });
+const update = async (id, body) =>
+    await User.findByIdAndUpdate(id, body, { new: true});
 
-    fs.writeFileSync(usersURL, JSON.stringify(updatedUsers));
-};
-
-const add = body => {
-    users.push({ ...body });
-    fs.writeFileSync(usersURL, JSON.stringify(users));
-};
+const add = async body => await User.create(body);
 
 module.exports = {
+    getAll,
     get,
     del,
     update,
