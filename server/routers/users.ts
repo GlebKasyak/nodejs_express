@@ -1,13 +1,15 @@
 import { Router } from "express";
+
+import { auth } from "../middleware";
 import UserController from "../controllers/user_controller";
 
+const router: Router = Router();
 const user_controller = new UserController();
-const router = Router();
 
-router.get("/users", user_controller.getUsers);
-router.get("/users/:id", user_controller.getUser);
-router.delete("/users/:id", user_controller.deleteUser);
-router.put("/users/:id", user_controller.updateUser);
-router.post("/users", user_controller.addUser);
+router.get("/", auth, user_controller.auth);
+router.post("/", user_controller.register);
+router.get("/logout", auth, user_controller.logout);
+router.post("/login", user_controller.login);
 
 export default router;
+

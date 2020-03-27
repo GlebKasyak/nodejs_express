@@ -1,17 +1,28 @@
-import express from "express";
-import { Document } from "mongoose";
+import { Request, Response } from "express";
+import { Document, Model } from "mongoose";
 
-export interface IUser extends Document {
+export interface IUserDocument extends Document {
     firstName: string,
-    secondName?: string,
+    secondName: string,
     email: string,
-    password: string
+    password: string,
+    token?: string
+
+    generateAuthToken(): Promise<string>
+}
+
+export interface IUserModel extends Model<IUserDocument>{
+    findByCredentials(email: string, password: string): Promise<any>
+}
+
+export interface ILogin {
+    user: object,
+    token: string
 }
 
 export interface IUserController {
-    getUsers(req: express.Request, res:express.Response): Promise<void>,
-    getUser(req: express.Request, res:express.Response): Promise<void>,
-    deleteUser(req: express.Request, res:express.Response): Promise<void>,
-    updateUser(req: express.Request, res:express.Response): Promise<void>,
-    addUser(req: express.Request, res:express.Response): Promise<void>,
+    login(req: Request, res: Response): Promise<void>,
+    logout(req: any, res: Response): Promise<void>,
+    register(req: Request, res: Response): Promise<void>,
+    auth(req: any, res: Response): Promise<void>,
 }

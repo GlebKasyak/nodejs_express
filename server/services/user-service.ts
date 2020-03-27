@@ -1,13 +1,31 @@
 import { User } from "../models";
+import { ILogin, IUserDocument } from "../interfaces/user.interface";
 
-export const getAll = async (): Promise<object> => await User.find({});
 
-export const get = async (id: string): Promise<object | null> => await User.findById(id);
+export const login = async (email: string, password: string): Promise<ILogin> => {
+    const user = await User.findByCredentials(email, password);
+    await user.generateAuthToken();
 
-export const del = async (id: string): Promise<object> =>
-    await User.deleteOne({ _id: id });
+    return user;
+};
 
-export const update = async (id: string, body: object): Promise<object | null> =>
-    await User.findByIdAndUpdate(id, body, { new: true });
+export const logout = async (userId: string): Promise<void> => {
+    const user = await User.findByIdAndUpdate(userId, { token: "" });
 
-export const add = async (body: object): Promise<object> => await User.create(body);
+    if(!user) throw new Error("Server error. Invalidate token");
+};
+
+export const register = async (email: string, password: string, body: object ): Promise<IUserDocument> => {
+
+    const candidate = await User.findOne({ email });
+    if(candidate) throw new Error("Error. User already exists");
+
+    const user = await User.create(body);
+    if(!user) throw new Error("Error: can nit create user");
+
+    return user;
+};
+
+export const auth = async (userId: string): Promise<any> => await User.findById(userId);
+
+

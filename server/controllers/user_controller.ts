@@ -1,61 +1,55 @@
-import express from "express";
+import { Request, Response } from "express";
 
-import { getAll, get, del, update, add } from "../services/user-service";
-import { IUserController } from "../interfaces/user.interface";
+import { login, logout, register, auth } from "../services/user-service";
+import { IUserController, IUserDocument } from "../interfaces/user.interface";
 
 
 class UserController implements IUserController {
     constructor() {}
 
-    public async getUsers(req: express.Request, res:express.Response): Promise<void> {
+    async login(req: Request, res: Response): Promise<void> {
         try {
-            const users = await getAll();
+            const { email, password } = req.body;
+            const user = await login(email, password);
 
-            res.json({ message: "All users", success: true, users });
-        } catch (err) {
-            res.status(400).json({ message: err.message, success: false })
+            res.cookie("x_auth", user.token)
+                .json({ message: "Token is created", success: true, user })
+        }  catch (err) {
+            res.status(400).json({ message: "Error. User is not created", success: false, err })
         }
     }
 
-    public async getUser(req: express.Request, res:express.Response): Promise<void> {
+    async logout(req: any, res: Response): Promise<void> {
         try {
-            const user = await get(req.params.id);
+            await logout(req.user.userId);
 
-            res.json({ message: "User by id", success: true, user });
+            res.clearCookie("x_auth").json({ message: "You are logout", success: true, isAuth: false });
         } catch (err) {
-            res.status(400).json({ message: err.message, success: false })
+            res.status(400).json({ message: "Error. Can you try again", err })
         }
     }
 
-    public async deleteUser(req: express.Request, res:express.Response): Promise<void> {
+    async register(req: Request, res: Response): Promise<void> {
         try {
-            const result = await del(req.params.id);
+            const { email, password } = req.body;
+            const user: IUserDocument = await register(email, password, { ...req.body } );
 
-            res.json({ message: "Users is deleted", success: true, result });
+            res.status(201).json({ message: "User is created", success: true, user });
         } catch (err) {
-            res.status(400).json({ message: err.message, success: false });
+            res.status(400).json({ message: "Error. User is not created", success: false, err })
         }
     }
 
-    public async updateUser(req: express.Request, res:express.Response): Promise<void> {
+    async auth(req: any, res: Response): Promise<void> {
         try {
-            const user = await update(req.params.id, req.body);
+            const user: object = await auth(req.user.userId);
 
-            res.json({ message: "User in updated", success: true, user });
+            res.json({ message: "You are authenticated", user, success: true });
         } catch (err) {
-            res.status(400).json({ message: err.message, success: false });
+            res.status(400).json({ message: "Error. Can you try again", err })
         }
     }
 
-    public async addUser(req: express.Request, res:express.Response): Promise<void> {
-        try {
-            const user = await add(req.body);
-
-            res.status(201).json({ message: "User in created", success: true, user });
-        } catch (err) {
-            res.status(400).json({ message: err.message, success: false });
-        }
-    }
 }
 
 export default UserController;
