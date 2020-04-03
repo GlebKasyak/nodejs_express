@@ -21,7 +21,7 @@ class UserController implements IUserController {
 
     async logout(req: any, res: Response): Promise<void> {
         try {
-            await logout(req.user.userId);
+            await logout(req.user._id);
 
             res.clearCookie("x_auth").json({ message: "You are logout", success: true, isAuth: false });
         } catch (err) {
@@ -42,7 +42,7 @@ class UserController implements IUserController {
 
     async auth(req: any, res: Response): Promise<void> {
         try {
-            const user: object = await auth(req.user.userId);
+            const user: object = await auth(req.user._id);
 
             res.json({ message: "You are authenticated", user, success: true });
         } catch (err) {
