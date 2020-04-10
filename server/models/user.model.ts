@@ -1,8 +1,9 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, Types } from "mongoose";
 import { NextFunction } from "express";
 import { sign } from "jsonwebtoken";
 import { hash, compare } from "bcryptjs";
 
+import Message from "./message.model";
 import { IUserDocument, IUserModel } from "../interfaces/user.interface";
 
 const userSchema: Schema = new Schema({
@@ -29,7 +30,7 @@ const userSchema: Schema = new Schema({
         required: true,
         trim: true,
     },
-    token: String
+    messages: [{ type: Types.ObjectId, ref: "Message" }]
 }, {
     timestamps: true
 });
@@ -60,15 +61,12 @@ userSchema.statics.findByCredentials = async (email: string, password: string): 
 
 userSchema.methods.generateAuthToken = async function(): Promise<string> {
     const user: any = this;
-    const token = sign(
-        { userId: user._id },
-        "token_key"
-    );
-    user.token = token;
-    await user.save();
-
-    return token;
+    return sign({ userId: user._id }, "token_key");
 };
+
+userSchema.post("remove", async function(user: IUserDocument): Promise<void> {
+    await Message.deleteMany({ writer: user._id }).populate("writer");
+});
 
 const User: IUserModel = model<IUserDocument, IUserModel>("User", userSchema);
 

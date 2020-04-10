@@ -7,6 +7,7 @@ export default async (req: any, res: Response, next: NextFunction): Promise<any>
 
     try {
         const token: string = req.cookies.x_auth;
+
         if(!token) {
             return res.status(401).json({ message: "No authorization" })
         }

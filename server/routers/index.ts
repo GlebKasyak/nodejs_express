@@ -1,1 +1,2 @@
-export { default as userRouter } from "./users";
+export { default as userRouter } from "./user.router";
+export { default as messageRouter } from "./message.router";
