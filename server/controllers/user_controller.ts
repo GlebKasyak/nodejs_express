@@ -7,7 +7,8 @@ import {
     auth,
     getUserById,
     getAllUsers,
-    deleteUser
+    deleteUser,
+    uploadAvatar
 } from "../services/user-service";
 import { IUserController, IUserDocument } from "../interfaces/user.interface";
 
@@ -27,7 +28,7 @@ class UserController implements IUserController {
         }
     }
 
-    public async logout(req: any, res: Response): Promise<void> {
+    public async logout(req: Request, res: Response): Promise<void> {
         try {
             await logout(req.user._id);
 
@@ -48,7 +49,7 @@ class UserController implements IUserController {
         }
     }
 
-    public async auth(req: any, res: Response): Promise<void> {
+    public async auth(req: Request, res: Response): Promise<void> {
         try {
             const user: IUserDocument = await auth(req.user._id);
 
@@ -83,6 +84,16 @@ class UserController implements IUserController {
             const users: IUserDocument[] = await getAllUsers();
 
             res.json({ message: "All users", users, success: true });
+        } catch (err) {
+            res.status(400).json({ message: err.message })
+        }
+    }
+
+    public async addAvatar(req: Request, res: Response): Promise<void> {
+        try {
+            const user: IUserDocument = await uploadAvatar(req.file, req.user.email);
+
+            res.json({ message: "Video is uploaded", user, success: true });
         } catch (err) {
             res.status(400).json({ message: err.message })
         }

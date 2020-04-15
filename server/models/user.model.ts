@@ -30,6 +30,7 @@ const userSchema: Schema = new Schema({
         required: true,
         trim: true,
     },
+    avatar: String,
     messages: [{ type: Types.ObjectId, ref: "Message" }]
 }, {
     timestamps: true

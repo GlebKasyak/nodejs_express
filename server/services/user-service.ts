@@ -1,6 +1,8 @@
 import { User } from "../models";
 import { ILogin, IUserDocument } from "../interfaces/user.interface";
 
+import { File } from "../interfaces/common/MulterInterface";
+
 
 export const login = async (email: string, password: string): Promise<ILogin> => {
     const user = await User.findByCredentials(email, password);
@@ -45,5 +47,14 @@ export const getAllUsers = async (): Promise<IUserDocument[]> => {
 
     return users;
 };
+
+export const uploadAvatar = async (file: File, email: string): Promise<IUserDocument | any> => {
+    const update = {
+        avatar: file.path.substring(file.path.indexOf("uploads"))
+    };
+
+    return await User.findOneAndUpdate({ email }, update, { new: true });
+};
+
 
 

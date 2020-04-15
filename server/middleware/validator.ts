@@ -11,4 +11,4 @@ const validator = (schema: ObjectSchema<any>): RequestHandler => async (req, res
     }
 };
 
-export default validator
+export default validator;

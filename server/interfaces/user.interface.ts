@@ -6,6 +6,7 @@ export interface IUserDocument extends Document {
     secondName: string,
     email: string,
     password: string,
+    avatar: string,
     messages?: []
 
     generateAuthToken(): Promise<string>
@@ -22,10 +23,11 @@ export interface ILogin {
 
 export interface IUserController {
     login(req: Request, res: Response): Promise<void>,
-    logout(req: any, res: Response): Promise<void>,
+    logout(req: Request, res: Response): Promise<void>,
     register(req: Request, res: Response): Promise<void>,
-    auth(req: any, res: Response): Promise<void>,
+    auth(req: Request, res: Response): Promise<void>,
     getUserById(req: Request, res: Response): Promise<void>,
     getAllUsers(req: Request, res: Response): Promise<void>,
     deleteUser(req: Request, res: Response): Promise<void>,
+    addAvatar(req: Request, res: Response): Promise<void>,
 }

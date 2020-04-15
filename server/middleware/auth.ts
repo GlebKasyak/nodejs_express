@@ -2,6 +2,8 @@ import { Response, NextFunction } from "express";
 import { User } from "./../models";
 import { verify } from "jsonwebtoken";
 
+import {} from "../interfaces/common/index";
+
 export default async (req: any, res: Response, next: NextFunction): Promise<any> => {
     if(req.method === "OPTIONS") return next();
 
@@ -18,6 +20,7 @@ export default async (req: any, res: Response, next: NextFunction): Promise<any>
             if(!user) throw new Error("there is no such user");
 
             req.user = user;
+            req.token = token;
             next();
         } catch (err) {
             return res.status(401).json({ message: "No authorization", err });
